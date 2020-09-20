@@ -39,8 +39,11 @@ public class App {
                 case "invert":
                     giveImg(invertedPixel(thePic), savePath);
                     break;
+                case "random":
+                    giveImg(random(thePic), savePath);
+                    break;
                 default:
-                    System.out.println("Unable to find mod, please use one of these options for you third argument:\nwhiteOut\nrotate\ninvert\n");
+                    System.out.println("Unable to find mod, please use one of these options for you third argument:\nwhiteOut\nrotate\ninvert\nrandom\n");
             }
         }else{
             System.out.println("Unable to find directory.  Please enter path to directory were you would like the img saved in as the second argument");
@@ -48,26 +51,17 @@ public class App {
         }
     }
 
-
 //----------------------------------------------------------------
     public static String createSaveString(String fromPath, String toPath, String mod)
     {
-        //String filePath = "src/main/resources/mario.bmp";
-
         String[] splitString = fromPath.split("/");
         String newName = mod + "_" + splitString[splitString.length -1];
 
-        //===========================================
         if(toPath.endsWith("/"))
         {
             toPath = toPath.substring(0, toPath.length() -1);
         }
         newName = toPath + "/" + newName;
-
-
-        //===========================================
-
-        System.out.println("this is the path  " + newName);
         return newName;
     }
 
@@ -155,6 +149,20 @@ public class App {
 
                 butcheredImg.setRGB(i, j, pixel);
 
+            }
+        }
+        return butcheredImg;
+    }
+
+    public static BufferedImage random(BufferedImage butcheredImg) {
+
+        int width = butcheredImg.getWidth();
+        int height = butcheredImg.getHeight();
+
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++)
+            {
+                butcheredImg.setRGB(i, j, (int)(Math.random() * ((16777216 - 1) + 1)));
             }
         }
         return butcheredImg;
