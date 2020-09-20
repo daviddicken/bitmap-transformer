@@ -14,19 +14,20 @@ import java.io.IOException;
 public class App {
     public static void main(String[] args) {
         //https://stackoverflow.com/questions/3868878/java-check-if-command-line-arguments-are-null
-        if(args.length != 3)
-        {
+        // test that 3 parameters were entered on the command line
+        if(args.length != 3) {
             System.out.println("\nPlease enter three arguments: 'Path to img' 'Path to save destination folder' 'modification'\n ");
             System.exit(0);
         }
 
         BufferedImage thePic = getImg(args[0]);
 
+        // Get a file to test if we can write to location
         String tempPath = args[1];
         File testPath = new File(tempPath);
 
         if(testPath.canWrite()) {
-
+            //get path and new file name to save new image
             File savePath = new File(createSaveString(args[0], tempPath, args[2]));
 
             switch (args[2]) {
@@ -52,13 +53,12 @@ public class App {
     }
 
 //----------------------------------------------------------------
-    public static String createSaveString(String fromPath, String toPath, String mod)
-    {
+    public static String createSaveString(String fromPath, String toPath, String mod) {
+
         String[] splitString = fromPath.split("/");
         String newName = mod + "_" + splitString[splitString.length -1];
 
-        if(toPath.endsWith("/"))
-        {
+        if(toPath.endsWith("/")) {
             toPath = toPath.substring(0, toPath.length() -1);
         }
         newName = toPath + "/" + newName;
@@ -132,7 +132,6 @@ public class App {
         int width = butcheredImg.getWidth();
         int height = butcheredImg.getHeight();
 
-
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 int pixel = butcheredImg.getRGB(i, j);
@@ -154,14 +153,15 @@ public class App {
         return butcheredImg;
     }
 
+//------------------------------------------------------------------
     public static BufferedImage random(BufferedImage butcheredImg) {
 
         int width = butcheredImg.getWidth();
         int height = butcheredImg.getHeight();
 
         for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++)
-            {
+            for (int j = 0; j < height; j++) {
+                // want to come back and randomize the red, green and blue values seperatly
                 butcheredImg.setRGB(i, j, (int)(Math.random() * ((16777216 - 1) + 1)));
             }
         }
