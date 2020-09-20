@@ -13,15 +13,21 @@ import java.io.IOException;
 
 public class App {
     public static void main(String[] args) {
-        //String filePath = args[0];
-        //String savePath = args[1];
+        //https://stackoverflow.com/questions/3868878/java-check-if-command-line-arguments-are-null
+        if(args.length != 3)
+        {
+            System.out.println("\nPlease enter three arguments: 'Path to img' 'Path to save destination folder' 'modification'\n ");
+            System.exit(0);
+        }
 
-        //String filePath = "src/main/resources/mario.bmp";
-        //String savePath = "src/main/resources/savedMario.bmp";
         BufferedImage thePic = getImg(args[0]);
 
-        File savePath = new File(args[1]);
-        if(savePath.isDirectory()) {
+        String tempPath = args[1];
+        File testPath = new File(tempPath);
+
+        if(testPath.canWrite()) {
+
+            File savePath = new File(createSaveString(args[0], tempPath, args[2]));
 
             switch (args[2]) {
                 case "whiteOut":
@@ -34,19 +40,38 @@ public class App {
                     giveImg(invertedPixel(thePic), savePath);
                     break;
                 default:
-                    System.out.println("Unable to find mod, please use one of these options for you third argument:\nwhiteOut <---\nrotate   <---\ninvert   <---\n");
+                    System.out.println("Unable to find mod, please use one of these options for you third argument:\nwhiteOut\nrotate\ninvert\n");
             }
         }else{
-            System.out.println("Unable to save file. Please check path.");
+            System.out.println("Unable to find directory.  Please enter path to directory were you would like the img saved in as the second argument");
             System.exit(0);
         }
     }
 
-    public static File checkSavePath(String path)
+
+//----------------------------------------------------------------
+    public static String createSaveString(String fromPath, String toPath, String mod)
     {
-        
+        //String filePath = "src/main/resources/mario.bmp";
+
+        String[] splitString = fromPath.split("/");
+        String newName = mod + "_" + splitString[splitString.length -1];
+
+        //===========================================
+        if(toPath.endsWith("/"))
+        {
+            toPath = toPath.substring(0, toPath.length() -1);
+        }
+        newName = toPath + "/" + newName;
+
+
+        //===========================================
+
+        System.out.println("this is the path  " + newName);
+        return newName;
     }
 
+//-------------------------------------------------------
     public static BufferedImage getImg(String file) {
         BufferedImage img = null;
         try {
@@ -58,12 +83,11 @@ public class App {
         return img;
     }
 
-    public static void giveImg(BufferedImage potato, File savePath) { // , String argsPath
+///-------------------------------------------------------------------
+    public static void giveImg(BufferedImage potato, File savePath) {
 
         try {
             RenderedImage finalImg = potato;
-
-            //File path = new File(savePath);
             ImageIO.write(finalImg, "bmp", savePath);
         } catch (IOException e) {
             System.out.println("We had a problem saving image.");
@@ -71,6 +95,7 @@ public class App {
         }
     }
 
+//-------------------------------------------------------------------------------
     public static BufferedImage ninetyDegreesTurned(BufferedImage butcheredImg) {
         // https://blog.idrsolutions.com/2019/05/image-rotation-in-java/ to know
         // how to rotate a photo.
@@ -90,11 +115,11 @@ public class App {
         return rotatedImage;
     }
 
+//----------------------------------------------------------------------
     public static BufferedImage pixelPlay(BufferedImage butcheredImg) {
+
         int width = butcheredImg.getWidth();
         int height = butcheredImg.getHeight();
-
-        int pixel = butcheredImg.getRGB(0, 0);
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -105,6 +130,7 @@ public class App {
         return butcheredImg;
     }
 
+//-------------------------------------------------------------------------
     public static BufferedImage invertedPixel(BufferedImage butcheredImg) {
 
         // https://www.geeksforgeeks.org/image-processing-java-set-4-colored-image-negative-image-conversion/?ref=rp
